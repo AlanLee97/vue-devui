@@ -246,7 +246,7 @@ function getRefName(binding: DirectiveBinding): string {
 function getFormName(binding: DirectiveBinding): string {
   const _refs = binding.instance.$refs;
   const key = Object.keys(_refs)[0];
-  return _refs[key]['name'];
+  return _refs[key] ? _refs[key]['name'] : '';
 }
 
 // 校验处理函数
@@ -277,10 +277,23 @@ function checkValidPopsition(positionStr: string): boolean {
   return isValid
 }
 
+// 获取FormControl标签上的uid
+function getDfcUID(el: HTMLElement) {
+  if(el.tagName === "BODY") return "";
+  if(el.dataset['uid']) return el.dataset['uid'];
+  let parent = el.parentElement;
+  if(parent.dataset['uid']?.startsWith('dfc-')) {
+    return parent.dataset['uid'];
+  } else {
+    return getDfcUID(parent.parentElement);
+  }
+}
+
+
 export default {
   mounted(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
     const isFormTag = el.tagName === 'FORM';
-    const dfcUID = el.parentNode.parentNode.parentElement.dataset.uid;
+    let dfcUID = getDfcUID(el);
     const refName = getRefName(binding);
 
     const hasOptions = isObject(binding.value) && hasKey(binding.value, 'options');
@@ -392,6 +405,9 @@ export default {
     const validator = new AsyncValidator(descriptor);
 
     const htmlEventValidateHandler = (e) => {
+      // 监听事件的回调函数中需重新获取dfcUID
+      // 当d-validate-rules指令用在跨组件验证时，因子组件先mounted，这时父组件还未mounted，拿不到父组件的data-uid，所以这里需重新获取dfcUID
+      dfcUID = getDfcUID(el);
       const modelValue = e.target.value;
       if(messageShowType === MessageShowTypeEnum.popover) {
         EventBus.emit("showPopoverErrorMessage", {showPopover: false, message: "", uid: dfcUID, popPosition} as ShowPopoverErrorMessageEventData);

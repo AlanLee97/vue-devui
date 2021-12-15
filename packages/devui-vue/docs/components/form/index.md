@@ -1508,28 +1508,33 @@ export default defineComponent({
 
 ### 跨组件验证
 
-> todo
+> done
 
 
+可以在子组件的数据录入类组件中使用`v-d-validate-rules`指令进行表单验证。
 
 
 :::demo
 
 ```vue
 <template>
-  <d-form ref="dFormWithComponent" :form-data="formModel">
+  <d-form ref="dFormCrossComponentValidate" :form-data="formModel" @submit="onSubmit">
     <d-form-item prop="name">
-      <d-form-label :required="true" >Name</d-form-label>
+      <d-form-label >Name</d-form-label>
       <d-form-control>
         <d-input v-model="formModel.name" />
       </d-form-control>
     </d-form-item>
     <d-form-item prop="age">
       <d-form-label :required="true" >Age</d-form-label>
-      <d-form-control>
-        <d-input v-model="formModel.age" />
+      <d-form-control extraInfo="这是子组件">
+        <cross-component-validate-demo :age="formModel.age" @ageChange="onAgeChange" />
       </d-form-control>
     </d-form-item>
+    <d-form-operation class="demo-form-operation">
+      <d-button type="submit" class="demo-btn">提交</d-button>
+      <d-button bsStyle="common" @click="resetForm">重置</d-button>
+    </d-form-operation>
   </d-form>
 </template>
 
@@ -1538,15 +1543,30 @@ import {defineComponent, reactive, ref} from 'vue';
 
 export default defineComponent({
   setup(props, ctx) {
-    const dFormWithComponent = ref(null);
+    const dFormCrossComponentValidate = ref(null);
     let formModel = reactive({
       name: 'AlanLee',
       age: '24',
     });
 
+    const resetForm = () => {
+      dFormCrossComponentValidate.value.resetFormFields();
+    }
+
+    const onSubmit = (e) => {
+      console.log('@submit', formModel);
+    }
+
+    const onAgeChange = val => {
+      formModel.age = val;
+    }
+
     return {
-      dFormWithComponent,
+      dFormCrossComponentValidate,
       formModel,
+      resetForm,
+      onSubmit,
+      onAgeChange
     }
   }
 })
@@ -1561,6 +1581,52 @@ export default defineComponent({
   margin-right: 10px;
 }
 </style>
+
+<!-- 子组件 -->
+<!--
+import { defineComponent, ref, watch } from 'vue';
+import './cross-component-validate-demo.scss';
+
+export default defineComponent({
+  name: 'CrossComponentValidateDemo',
+  props: {
+    age: {
+      type: [Number, String],
+      default: 0
+    }
+  },
+  emits: ['ageChange'],
+  setup(props, ctx) {
+    const ageData = ref(props.age);
+
+    const customAsyncValidator = (rule, value) => {
+      return value >= 0 && value <= 200;
+    }
+
+    watch(() => props.age, (newVal) => {
+      ageData.value = newVal;
+    })
+    
+    return () => {
+      return <div class="cross-component-validate-demo" id="cross-component-validate-demo">
+        <d-input v-model={ageData.value} onChange={(val) => {
+          ctx.emit('ageChange', val);
+        }} v-d-validate-rules={{
+          rules: {
+            asyncValidators: [
+              {message: '年龄范围必须在0~200之间', asyncValidator: customAsyncValidator}
+            ]
+          },
+          options: {
+            updateOn: 'input',
+            asyncDebounceTime: 500
+          }
+        }} />
+      </div>
+    }
+  }
+})
+-->
 
 ```
 :::

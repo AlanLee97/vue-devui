@@ -4,6 +4,7 @@ import FormLabel from './src/form-label/form-label';
 import FormItem from './src/form-item/form-item';
 import FormControl from './src/form-control/form-control';
 import FormOperation from './src/form-operation/form-operation';
+import CrossComponentValidateDemo from './src/cross-component-validate-demo/cross-component-validate-demo';
 import dValidateRules from './src/directive/d-validate-rules';
 
 Form.install = function(app: App) {
@@ -27,7 +28,12 @@ FormOperation.install = function(app: App) {
   app.component(FormOperation.name, FormOperation)
 }
 
-export { Form, FormLabel, FormItem, FormControl, FormOperation }
+CrossComponentValidateDemo.install = function(app: App) {
+  app.component(CrossComponentValidateDemo.name, CrossComponentValidateDemo)
+}
+
+export { Form, FormLabel, FormItem, FormControl, FormOperation, CrossComponentValidateDemo }
+
 
 export default {
   title: 'Form 表单',
@@ -39,5 +45,6 @@ export default {
     app.use(FormItem as any);
     app.use(FormControl as any);
     app.use(FormOperation as any);
+    app.use(CrossComponentValidateDemo as any);
   }
 }
