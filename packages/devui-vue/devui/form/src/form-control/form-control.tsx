@@ -19,7 +19,7 @@ export default defineComponent({
     const dFormItem = reactive(inject(formItemInjectionKey, {} as IFormItem));
     const labelData = reactive(dForm.labelData);
     const isHorizontal = labelData.layout === 'horizontal';
-    const uid = uniqueId("dfc-");
+    const uid = uniqueId('dfc-');
     const showPopover = ref(false);
     const updateOn = ref('change');
     const popPosition = ref<any>(props.popPosition);
