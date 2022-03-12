@@ -104,6 +104,33 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GaoNeng-wWw",
+      "name": "GaoNeng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31283122?v=4",
+      "profile": "https://github.com/GaoNeng-wWw",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "xingyan95",
+      "name": "行言",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11143986?v=4",
+      "profile": "https://github.com/xingyan95",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "devin974",
+      "name": "devin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67035714?v=4",
+      "profile": "https://devin974.github.io/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
